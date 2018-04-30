@@ -10,7 +10,7 @@ function Icon(props) {
   }
 
   return (
-    <span>
+    <span className="Claim-icon">
       { props.value ? '✔' : '✖'}
     </span>
   );

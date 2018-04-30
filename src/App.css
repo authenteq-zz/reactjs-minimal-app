@@ -20,3 +20,9 @@
 .App-intro {
   font-size: large;
 }
+
+.Claim-icon {
+  position: absolute;
+  margin-top: 10px;
+  margin-left: -22px;
+}
