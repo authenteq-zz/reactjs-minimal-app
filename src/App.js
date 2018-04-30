@@ -48,11 +48,11 @@ class App extends Component {
 
   handleFormSubmit = () => {
     const { userTokenId } = this.state;
-    const givenname = document.getElementById('givenname').value || 'no-value';
-    const lastname = document.getElementById('lastname').value || 'no-value';
-    const dob = document.getElementById('dob').value || 'no-value';
-    const nationality = document.getElementById('nationality').value || 'no-value';
-    const idnumber = document.getElementById('idnumber').value || 'no-value';
+    const givenname = document.getElementById('givenname').value;
+    const lastname = document.getElementById('lastname').value;
+    const dob = document.getElementById('dob').value;
+    const nationality = document.getElementById('nationality').value;
+    const idnumber = document.getElementById('idnumber').value;
 
     Promise.all([
       api.verifyClaim(userTokenId, 'givenname', givenname),
