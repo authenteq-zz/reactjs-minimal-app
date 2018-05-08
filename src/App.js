@@ -2,19 +2,8 @@ import React, { Component } from 'react';
 import * as api from './api';
 import logo from './logo.png';
 import './App.css';
+import Form from './Form';
 import QRCode from './QRCode';
-
-function Icon(props) {
-  if (props.value === undefined) {
-    return <span />;
-  }
-
-  return (
-    <span className="Claim-icon">
-      { props.value ? '✔' : '✖'}
-    </span>
-  );
-}
 
 class App extends Component {
   constructor() {
@@ -23,9 +12,18 @@ class App extends Component {
       tokenId: null,
       userTokenId: null,
       step: 'loading',
+      step: 'form',
+      formData: {
+        givenname: '',
+        lastname: '',
+        dob: '',
+        nationality: '',
+        idnumber: '',
+      },
       claimResults: {},
     };
   }
+
   componentDidMount() {
     api.connect(this.handleApiConnect, this.handleUserAuthenticate)
   }
@@ -40,9 +38,10 @@ class App extends Component {
 
   handleUserAuthenticate = (userTokenId) => {
     console.log('userTokenId', userTokenId);
+  handleFormChange = (key, value) => {
+    const formData = Object.assign({}, this.state.formData, { [key]: value });
     this.setState({
-      userTokenId,
-      step: 'form'
+      formData,
     });
   }
 
@@ -85,8 +84,10 @@ class App extends Component {
   render() {
     const {
       claimResults,
+      formData,
       step,
       tokenId,
+      errorMessage,
     } = this.state;
     console.log(claimResults);
     return (
@@ -95,9 +96,6 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to Authenteq sample app</h1>
         </header>
-        { step === 'loading' && (
-          <h3>Loading security token..</h3>
-        )}
         { step === 'qr-code' && (
           <div>
             <h3>Scan using Authenteq app</h3>
@@ -105,43 +103,17 @@ class App extends Component {
           </div>
         )}
         { step === 'form' && (
-          <form
-            action="#"
-            className="pure-form pure-form-aligned"
-            onSubmit={this.handleFormSubmit}
-          >
-            <h3>Fill out the form to verify your information</h3>
-            <fieldset>
-                <div className="pure-control-group">
-                    <label htmlFor="givenname">First name</label>
-                    <input id="givenname" type="text" placeholder="First name" />
-                    <Icon value={claimResults.givenname} />
-                </div>
-                <div className="pure-control-group">
-                    <label htmlFor="lastname">Last name</label>
-                    <input id="lastname" placeholder="Last name" />
-                    <Icon value={claimResults.lastname} />
-                </div>
-                <div className="pure-control-group">
-                    <label htmlFor="dob">Date of birth</label>
-                    <input id="dob" placeholder="yyyy-mm-dd" />
-                    <Icon value={claimResults.dob} />
-                </div>
-                <div className="pure-control-group">
-                    <label htmlFor="nationality">Nationality</label>
-                    <input id="nationality" placeholder="Nationality" />
-                    <Icon value={claimResults.nationality} />
-                </div>
-                <div className="pure-control-group">
-                    <label htmlFor="idnumber">Passport no.</label>
-                    <input id="idnumber" placeholder="Passport no." />
-                    <Icon value={claimResults.idnumber} />
-                </div>
-                <div className="pure-controls">
-                    <button type="submit" className="pure-button pure-button-primary">Verify information</button>
-                </div>
-            </fieldset>
-        </form>
+          <div>
+            <Form
+              claimResults={claimResults}
+              formData={formData}
+              onChange={this.handleFormChange}
+              onSubmit={this.handleFormSubmit}
+            />
+            { errorMessage && (
+              <span className="Form-error">{errorMessage}</span>
+            )}
+          </div>
         )}
       </div>
     );

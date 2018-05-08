@@ -26,3 +26,8 @@
   margin-top: 10px;
   margin-left: -22px;
 }
+
+.Form-error {
+  color: red;
+  font-weight: bolder;
+}
