@@ -9,9 +9,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      sessionId: null,
       tokenId: null,
-      userTokenId: null,
-      step: 'loading',
       step: 'form',
       formData: {
         givenname: '',
@@ -28,16 +27,24 @@ class App extends Component {
     api.connect(this.handleApiConnect, this.handleUserAuthenticate)
   }
 
-  handleApiConnect = (data) => {
-    console.log('tokenId', data.id);
+  handleApiConnect = (sessionId) => {
+    console.log('handleApiConnect::sessionId', sessionId);
     this.setState({
-      tokenId: data.id,
-      step: 'qr-code',
+      sessionId,
     });
   }
 
-  handleUserAuthenticate = (userTokenId) => {
-    console.log('userTokenId', userTokenId);
+  handleUserAuthenticate = (tokenId) => {
+    console.log('handleUserAuthenticate::tokenId', tokenId);
+
+    this.setState({
+      tokenId,
+    });
+
+    // Verify data after we recived signal that user have scanned QR code
+    this.handleVerifyData(tokenId, this.state.formData);
+  }
+
   handleFormChange = (key, value) => {
     const formData = Object.assign({}, this.state.formData, { [key]: value });
     this.setState({
@@ -46,28 +53,49 @@ class App extends Component {
   }
 
   handleFormSubmit = () => {
-    const { userTokenId } = this.state;
-    const givenname = document.getElementById('givenname').value;
-    const lastname = document.getElementById('lastname').value;
-    const dob = document.getElementById('dob').value;
-    const nationality = document.getElementById('nationality').value;
-    const idnumber = document.getElementById('idnumber').value;
+    const {
+      tokenId,
+      formData,
+    } = this.state;
+
+    // Switch to QR code screen if user have not scanned QR code yet
+    if (!tokenId) {
+      this.setState({
+        step: 'qr-code',
+      });
+      return false;
+    }
+
+    // This call allows us to verify data again after user scanned QR code
+    // and filled form is shown. It gets the user opportunity to correct
+    // information
+    this.handleVerifyData(tokenId, formData);
+    return false;
+  }
+
+  handleVerifyData = (tokenId, data) => {
+    // Reset the claim results and error message
+    this.setState({
+      claimResults: {},
+      errorMessage: null,
+    });
 
     Promise.all([
-      api.verifyClaim(userTokenId, 'givenname', givenname),
-      api.verifyClaim(userTokenId, 'lastname', lastname),
-      api.verifyClaim(userTokenId, 'dob', dob),
-      api.verifyClaim(userTokenId, 'nationality', nationality),
-      api.verifyClaim(userTokenId, 'idnumber', idnumber),
+      api.verifyClaim(tokenId, 'givenname', data.givenname),
+      api.verifyClaim(tokenId, 'lastname', data.lastname),
+      api.verifyClaim(tokenId, 'dob', data.dob),
+      api.verifyClaim(tokenId, 'nationality', data.nationality),
+      api.verifyClaim(tokenId, 'idnumber', data.idnumber),
     ])
       .then(([givenname, lastname, dob, nationality, idnumber]) => {
-        console.log('givenname', givenname);
-        console.log('lastname', lastname);
-        console.log('dob', dob);
-        console.log('nationality', nationality);
-        console.log('passport no.', idnumber);
+        console.log('Givenname is valid:', givenname);
+        console.log('Lastname is valid:', lastname);
+        console.log('Date of birth is valid:', dob);
+        console.log('Nationality is valid:', nationality);
+        console.log('Passport no. is valid:', idnumber);
 
         this.setState({
+          step: 'form',
           claimResults: {
             givenname,
             lastname,
@@ -76,9 +104,14 @@ class App extends Component {
             idnumber,
           },
         });
-      });
-
-    return false;
+      })
+      .catch((err) => {
+        this.setState({
+          step: 'form',
+          errorMessage: err,
+        });
+      })
+      ;
   }
 
   render() {
@@ -86,10 +119,10 @@ class App extends Component {
       claimResults,
       formData,
       step,
-      tokenId,
+      sessionId,
       errorMessage,
     } = this.state;
-    console.log(claimResults);
+
     return (
       <div className="App">
         <header className="App-header">
@@ -99,7 +132,7 @@ class App extends Component {
         { step === 'qr-code' && (
           <div>
             <h3>Scan using Authenteq app</h3>
-            <QRCode value={tokenId} />
+            <QRCode value={sessionId} />
           </div>
         )}
         { step === 'form' && (
