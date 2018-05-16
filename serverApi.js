@@ -3,6 +3,8 @@ const axios = require('axios');
 const API_ROOT = 'https://staging-api.authenteq.com';
 const API_GET_USER_TOKEN = `${API_ROOT}/api/v1/claims/getUserToken`;
 const API_VERIFY_CLAIM_ROOT = `${API_ROOT}/api/v1/claims`;
+const API_KYC_ID_DOCUMENT = `${API_ROOT}/api/v1/kyc/getIdDocument`;
+const API_KYC_AML = `${API_ROOT}/api/v1/kyc/getAmlCheck`;
 
 const PARTNER_ID = process.env.AUTHENTEQ_PARTNER_ID;
 const PARTNER_KEY = process.env.AUTHENTEQ_API_KEY;
@@ -76,7 +78,61 @@ function verifyClaim(userTokenId, claimType, value) {
   });
 }
 
+function getAmlCheck(userTokenId) {
+  return new Promise((resolve, reject) => {
+
+    const url = API_KYC_AML;
+    const payload = createPayload({
+      userToken: userTokenId,
+    });
+
+    axios.post(url, payload).then((response) => {
+      console.log(`getAmlCheck(${userTokenId})`, response);
+      const { data } = response;
+
+      if (data && !data.error) {
+        const claimResult = data.claim;
+        resolve(claimResult);
+      } else {
+        const error = new Error(data.message);
+        reject(error);
+      }
+    })
+    .catch((error) => {
+      reject(error);
+    });
+  });
+}
+
+function getIdDocument(userTokenId) {
+  return new Promise((resolve, reject) => {
+
+    const url = API_KYC_ID_DOCUMENT;
+    const payload = createPayload({
+      userToken: userTokenId,
+    });
+
+    axios.post(url, payload).then((response) => {
+      console.log(`getIdDocument(${userTokenId})`, response);
+      const { data } = response;
+
+      if (data && !data.error) {
+        const claimResult = data.claim;
+        resolve(claimResult);
+      } else {
+        const error = new Error(data.message);
+        reject(error);
+      }
+    })
+    .catch((error) => {
+      reject(error);
+    });
+  });
+}
+
 module.exports = {
   getUserToken,
+  getAmlCheck,
+  getIdDocument,
   verifyClaim,
 }

@@ -55,6 +55,56 @@ router.post('/verifyClaim', (req, res) => {
     });
 });
 
+router.post('/getAmlCheck', (req, res) => {
+  const {
+    tokenId,
+  } = req.body;
+
+  serverApi
+    .getUserToken(tokenId)
+    .then((userTokenId) => serverApi.getAmlCheck(userTokenId))
+    .then((result) => {
+      res.json({
+        error: false,
+        result,
+      });
+    })
+    .catch((err) => {
+      console.log(`ERROR /getAmlCheck/ {${tokenId}}`);
+      console.log(err);
+
+      res.json({
+        error: true,
+        errorMessage: 'AML check failed.',
+      });
+    });
+});
+
+router.post('/getIdDocument', (req, res) => {
+  const {
+    tokenId,
+  } = req.body;
+
+  serverApi
+    .getUserToken(tokenId)
+    .then((userTokenId) => serverApi.getIdDocument(userTokenId))
+    .then((result) => {
+      res.json({
+        error: false,
+        result,
+      });
+    })
+    .catch((err) => {
+      console.log(`ERROR /getIdDocument/ {${tokenId}}`);
+      console.log(err);
+
+      res.json({
+        error: true,
+        errorMessage: 'Retrieving ID Document failed.',
+      });
+    });
+});
+
 app.use('/api', router);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
