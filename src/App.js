@@ -17,7 +17,7 @@ class App extends Component {
         lastname: '',
         dob: '',
         nationality: '',
-        idnumber: '',
+        passportno: '',
       },
       claimResults: {},
     };
@@ -85,14 +85,14 @@ class App extends Component {
       api.verifyClaim(tokenId, 'lastname', data.lastname),
       api.verifyClaim(tokenId, 'dob', data.dob),
       api.verifyClaim(tokenId, 'nationality', data.nationality),
-      api.verifyClaim(tokenId, 'idnumber', data.idnumber),
+      api.verifyClaim(tokenId, 'passportno', data.passportno),
     ])
-      .then(([givenname, lastname, dob, nationality, idnumber]) => {
+      .then(([givenname, lastname, dob, nationality, passportno]) => {
         console.log('Givenname is valid:', givenname);
         console.log('Lastname is valid:', lastname);
         console.log('Date of birth is valid:', dob);
         console.log('Nationality is valid:', nationality);
-        console.log('Passport no. is valid:', idnumber);
+        console.log('Passport no. is valid:', passportno);
 
         this.setState({
           step: 'form',
@@ -101,7 +101,7 @@ class App extends Component {
             lastname,
             dob,
             nationality,
-            idnumber,
+            passportno,
           },
         });
       })

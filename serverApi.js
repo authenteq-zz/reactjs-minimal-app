@@ -12,7 +12,7 @@ const VALID_CLAIMS = [
   'lastname',
   'dob',
   'nationality',
-  'idnumber',
+  'passportno',
   'eighteenplus',
 ];
 

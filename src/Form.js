@@ -60,14 +60,14 @@ function Form(props) {
               <Icon value={claimResults.nationality} />
           </div>
           <div className="pure-control-group">
-              <label htmlFor="idnumber">Passport no.</label>
+              <label htmlFor="passportno">Passport no.</label>
               <input
-                id="idnumber"
+                id="passportno"
                 placeholder="Passport no."
-                value={formData.idnumber}
-                onChange={(e) => onChange('idnumber', e.target.value)}
+                value={formData.passportno}
+                onChange={(e) => onChange('passportno', e.target.value)}
               />
-              <Icon value={claimResults.idnumber} />
+              <Icon value={claimResults.passportno} />
           </div>
           <div className="pure-controls">
               <button type="submit" className="pure-button pure-button-primary">Verify information</button>
