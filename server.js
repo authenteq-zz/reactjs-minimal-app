@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const axios = require('axios');
 const serverApi = require('./serverApi');
 
 const app = express();
