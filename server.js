@@ -2,6 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const serverApi = require('./serverApi');
 
+// Read variables in .env file. You should create your .env file and write
+// following variables:
+// AUTHENTEQ_PARTNER_ID=<your Authenteq Partner ID>
+// AUTHENTEQ_API_KEY=<your Authenteq API KEY>
+require('dotenv').config()
+
+// Configure Express server
 const app = express();
 const port = process.env.PORT || 3001;
 const router = express.Router();

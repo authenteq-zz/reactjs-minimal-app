@@ -4,8 +4,8 @@ const API_ROOT = 'https://staging-api.authenteq.com';
 const API_GET_USER_TOKEN = `${API_ROOT}/api/v1/claims/getUserToken`;
 const API_VERIFY_CLAIM_ROOT = `${API_ROOT}/api/v1/claims`;
 
-const PARTNER_ID = 'ynKF89';
-const PARTNER_KEY = '45KBODY8TwWAFjHjG1Da8h92C26n23EB';
+const PARTNER_ID = process.env.AUTHENTEQ_PARTNER_ID;
+const PARTNER_KEY = process.env.AUTHENTEQ_API_KEY;
 
 const VALID_CLAIMS = [
   'givenname',
