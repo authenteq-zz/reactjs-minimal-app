@@ -53,7 +53,7 @@ export function connect(onConnect, onUserAuthenticate) {
         const tokenId = JSON.parse(user.body);
         console.log('API /topic/authenticate/', tokenId);
 
-        // Handle tokenId back to app logic, so it can retrieve userTokenId.
+        // Handle tokenId back to app logic, so it can retrieve tokenId.
         onUserAuthenticate(tokenId);
       });
     });
