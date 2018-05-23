@@ -1,12 +1,13 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const serverApi = require('./serverApi');
-
 // Read variables in .env file. You should create your .env file and write
 // following variables:
 // AUTHENTEQ_PARTNER_ID=<your Authenteq Partner ID>
 // AUTHENTEQ_API_KEY=<your Authenteq API KEY>
 require('dotenv').config()
+
+const fs = require('fs');
+const express = require('express');
+const bodyParser = require('body-parser');
+const serverApi = require('./serverApi');
 
 // Configure Express server
 const app = express();
@@ -25,18 +26,8 @@ router.post('/verifyClaim', (req, res) => {
     value,
   } = req.body;
 
-  // console.log(req.body);
-
-  // We call getUserToken for every verifyClaim request. As it's separate API
-  // call, you should probably implement it in a way that it's called only once
-  // for all claims that you want to perform. You can do that by either
-  // implementing a 'verifyClaims' endpoint that would verify multiple claims
-  // at once, or by caching this value on the server.
-  //
-  // This implementation is simply as a showcase
   serverApi
-    .getUserToken(tokenId)
-    .then((userTokenId) => serverApi.verifyClaim(userTokenId, claimType, value))
+    .verifyClaim(tokenId, claimType, value)
     .then((result) => {
       res.json({
         error: false,
@@ -61,8 +52,7 @@ router.post('/getAmlCheck', (req, res) => {
   } = req.body;
 
   serverApi
-    .getUserToken(tokenId)
-    .then((userTokenId) => serverApi.getAmlCheck(userTokenId))
+    .getAmlCheck(tokenId)
     .then((result) => {
       res.json({
         error: false,
@@ -86,16 +76,22 @@ router.post('/getIdDocument', (req, res) => {
   } = req.body;
 
   serverApi
-    .getUserToken(tokenId)
-    .then((userTokenId) => serverApi.getIdDocument(userTokenId))
-    .then((result) => {
+    .getIdDocument(tokenId)
+    .then((imageBuffer) => {
+      fs.writeFile(`./photo-${tokenId}.jpg`, imageBuffer, 'binary', (err) => {
+        if (err) {
+          console.log("ERROR: Couldn't write photo to local file");
+        }
+      });
+
+      const encodedImage = imageBuffer.toString('base64');
       res.json({
         error: false,
-        result,
+        result: `data:image/jpg;base64,${encodedImage}`,
       });
     })
     .catch((err) => {
-      console.log(`ERROR /getIdDocument/ {${tokenId}}`);
+      console.log(`ERROR /getIdDocument/ ${tokenId}`);
       console.log(err);
 
       res.json({

@@ -87,12 +87,11 @@ function getAmlCheck(userTokenId) {
     });
 
     axios.post(url, payload).then((response) => {
-      console.log(`getAmlCheck(${userTokenId})`, response);
+      console.log(`getAmlCheck(${userTokenId})`, response.data);
       const { data } = response;
 
       if (data && !data.error) {
-        const claimResult = data.claim;
-        resolve(claimResult);
+        resolve(data.data);
       } else {
         const error = new Error(data.message);
         reject(error);
@@ -104,21 +103,27 @@ function getAmlCheck(userTokenId) {
   });
 }
 
-function getIdDocument(userTokenId) {
+function getIdDocument(tokenId) {
   return new Promise((resolve, reject) => {
 
     const url = API_KYC_ID_DOCUMENT;
     const payload = createPayload({
-      userToken: userTokenId,
+      userToken: tokenId,
     });
 
-    axios.post(url, payload).then((response) => {
-      console.log(`getIdDocument(${userTokenId})`, response);
+    axios.post(url, payload, { responseType: 'stream' }).then((response) => {
       const { data } = response;
 
       if (data && !data.error) {
-        const claimResult = data.claim;
-        resolve(claimResult);
+        let imageBuffer = Buffer.from('');
+
+        data.on('data', (chunk) => {
+          imageBuffer = Buffer.concat([imageBuffer, chunk])
+        });
+
+        data.on('end', () => {
+          resolve(imageBuffer);
+        });
       } else {
         const error = new Error(data.message);
         reject(error);
