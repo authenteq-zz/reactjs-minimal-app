@@ -17,13 +17,17 @@ function Form(props) {
       onSubmit={onSubmit}
     >
       <h3>Fill out the form to verify your information</h3>
+      <p>
+        Please, don't use special characters when you fill out your name.
+        If you have middle name as well, enter it in the "Given name" field.
+      </p>
       <fieldset>
           <div className="pure-control-group">
-              <label htmlFor="givenname">First name</label>
+              <label htmlFor="givenname">Given name</label>
               <input
                 id="givenname"
                 type="text"
-                placeholder="First name"
+                placeholder="Given name"
                 value={formData.givenname}
                 onChange={(e) => onChange('givenname', e.target.value)}
               />
