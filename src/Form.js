@@ -69,6 +69,33 @@ function Form(props) {
               />
               <Icon value={claimResults.passportno} />
           </div>
+          <div className="pure-control-group">
+            <input
+              disabled
+              checked
+              id="aml-check"
+              type="checkbox"
+              onChange={(e) => onChange('amlCheck', e.target.checked)}
+            />
+            Anti-money laundering (AML) check
+          </div>
+          <div className="pure-control-group">
+            <input
+              disabled
+              checked
+              id="kyc-check"
+              type="checkbox"
+              onChange={(e) => onChange('kycCheck', e.target.checked)}
+            />
+            Know your customer (KYC) check
+          </div>
+          {/* <label htmlFor="aml-check" className="pure-checkbox">
+            <input
+              id="aml-check"
+              type="checkbox"
+              onChange={(e) => onChange('amlCheck', e.target.checked)}
+            /> Perform Anti-money laundering (AML) check
+          </label> */}
           <div className="pure-controls">
               <button type="submit" className="pure-button pure-button-primary">Verify information</button>
           </div>

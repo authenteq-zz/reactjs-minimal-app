@@ -12,6 +12,8 @@ class App extends Component {
       sessionId: null,
       tokenId: null,
       step: 'form',
+      imgData: null,
+      amlData: null,
       formData: {
         givenname: '',
         lastname: '',
@@ -24,7 +26,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    api.connect(this.handleApiConnect, this.handleUserAuthenticate)
+    const scope = 'givenname,surname,dob,nationality,passportno,aml,kyc';
+    api.connect(this.handleApiConnect, this.handleUserAuthenticate, scope);
   }
 
   handleApiConnect = (sessionId) => {
@@ -76,9 +79,13 @@ class App extends Component {
   handleVerifyData = (tokenId, data) => {
     // Reset the claim results and error message
     this.setState({
+      imgData: null,
+      amlData: null,
       claimResults: {},
       errorMessage: null,
     });
+
+    if ( data.givenname )
 
     Promise.all([
       api.verifyClaim(tokenId, 'givenname', data.givenname),
@@ -86,16 +93,14 @@ class App extends Component {
       api.verifyClaim(tokenId, 'dob', data.dob),
       api.verifyClaim(tokenId, 'nationality', data.nationality),
       api.verifyClaim(tokenId, 'passportno', data.passportno),
+      api.getAmlCheck(tokenId),
+      api.getIdDocument(tokenId),
     ])
-      .then(([givenname, lastname, dob, nationality, passportno]) => {
-        console.log('Givenname is valid:', givenname);
-        console.log('Lastname is valid:', lastname);
-        console.log('Date of birth is valid:', dob);
-        console.log('Nationality is valid:', nationality);
-        console.log('Passport no. is valid:', passportno);
-
+      .then(([givenname, lastname, dob, nationality, passportno, amlResult, base64Image]) => {
         this.setState({
           step: 'form',
+          imgData: base64Image,
+          amlData: amlResult,
           claimResults: {
             givenname,
             lastname,
@@ -118,6 +123,8 @@ class App extends Component {
     const {
       claimResults,
       formData,
+      amlData,
+      imgData,
       step,
       sessionId,
       errorMessage,
@@ -145,6 +152,18 @@ class App extends Component {
             />
             { errorMessage && (
               <span className="Form-error">{errorMessage}</span>
+            )}
+            { amlData && (
+              <div>
+                <h3>Anti-money laundering (AML) check</h3>
+                <pre>{amlData}</pre>
+              </div>
+            )}
+            { imgData && (
+              <div>
+                <h3>Photo of passport</h3>
+                <img src={imgData} width="600" height="auto" id="photo"/>
+              </div>
             )}
           </div>
         )}
