@@ -4,7 +4,7 @@ import axios from 'axios';
 
 // const API_ROOT = 'https://staging-api.authenteq.com';
 const PARTNER_ID = 'ynKF89';
-const API_ROOT = 'https://staging-api.authenteq.com';
+const API_ROOT = 'https://api.authenteq.com';
 const API_LOGIN = `${API_ROOT}/login`;
 
 export function verifyClaim(tokenId, claimType, value) {

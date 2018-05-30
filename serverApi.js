@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const API_ROOT = 'https://staging-api.authenteq.com';
+const API_ROOT = 'https://api.authenteq.com';
 const API_GET_USER_TOKEN = `${API_ROOT}/api/v1/claims/getUserToken`;
 const API_VERIFY_CLAIM_ROOT = `${API_ROOT}/api/v1/claims`;
 const API_KYC_ID_DOCUMENT = `${API_ROOT}/api/v1/kyc/getIdDocument`;
