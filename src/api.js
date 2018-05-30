@@ -68,27 +68,27 @@ export function connect(onConnect, onUserAuthenticate, scope) {
   }
 
   // console.log('Connecting using Stomp..');
-  const stompClient = StompJS.over(new SockJS(API_LOGIN));
+  const socket = new SockJS(API_LOGIN);
+  const stompClient = StompJS.over(socket);
 
   // Don't print debug messages into console
   // stompClient.debug = function() {};
 
   stompClient.connect({}, () => {
+    const transportUrl = socket._transport.url; // eslint-disable-line no-underscore-dangle
+    const sessionId = /\/([^/]+)\/websocket/.exec(transportUrl)[1];
 
-    stompClient.subscribe('/user/topic/authenticationId', (response) => {
+    stompClient.subscribe(`/queue/${sessionId}.authenticationId`, (response) => {
       const data = JSON.parse(response.body);
-      const sessionId = data.id;
-      // console.log('API /user/topic/authenticationId', data);
+      const tokenId = data.id;
 
-      // Handle sessionId to app logic, so app can display a QR code
-      onConnect(sessionId);
+      // Handle tokenId to app logic, so app can display a QR code
+      onConnect(tokenId);
 
-      stompClient.subscribe(`/topic/authenticate/${sessionId}`, () => {
-        // const tokenId = JSON.parse(response2.body);
-        // console.log('API /topic/authenticate/', tokenId);
+      stompClient.subscribe(`/topic/authenticate.${tokenId}`, () => {
 
-        // Handle tokenId back to app logic, so it can retrieve tokenId.
-        onUserAuthenticate(sessionId);
+        // Handle tokenId back to app logic
+        onUserAuthenticate(tokenId);
       });
     });
 
