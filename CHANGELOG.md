@@ -1,9 +1,9 @@
 # Changelog
 
-## Anti-money laundering
+### v1.1.1
 
-Sample result (JSON):
-  `{"id":0,"ref":"1527688904-A1rpXA6h","match_status":"no_match"}`
+* Add `src/countries.json`
+* Change Nationality field to dropdown
 
 ### v1.1.0
 
