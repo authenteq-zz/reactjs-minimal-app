@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from './Icon';
 
+import countryList from './countries.json';
+
 function Form(props) {
   const {
     claimResults,
@@ -9,6 +11,8 @@ function Form(props) {
     onChange,
     onSubmit,
   } = props;
+
+  const countryListNodes = countryList.map((c) => <option key={c.iso3} value={c.iso3}>{c.name}</option>);
 
   return (
     <form
@@ -55,12 +59,14 @@ function Form(props) {
           </div>
           <div className="pure-control-group">
               <label htmlFor="nationality">Nationality</label>
-              <input
+              <select
                 id="nationality"
                 placeholder="Nationality"
-                value={formData.nationality}
+                selected={formData.nationality}
                 onChange={(e) => onChange('nationality', e.target.value)}
-              />
+              >
+                {countryListNodes}
+              </select>
               <Icon value={claimResults.nationality} />
           </div>
           <div className="pure-control-group">
