@@ -1,7 +1,6 @@
 const axios = require('axios');
 
 const API_ROOT = 'https://api.authenteq.com';
-const API_GET_USER_TOKEN = `${API_ROOT}/api/v1/claims/getUserToken`;
 const API_VERIFY_CLAIM_ROOT = `${API_ROOT}/api/v1/claims`;
 const API_KYC_ID_DOCUMENT = `${API_ROOT}/api/v1/kyc/getIdDocument`;
 const API_KYC_AML = `${API_ROOT}/api/v1/kyc/getAmlCheck`;
@@ -23,24 +22,6 @@ function createPayload(data) {
     partnerId: PARTNER_ID,
     apiKey: PARTNER_KEY,
   }, data);
-}
-
-function getUserToken(tokenId) {
-  return new Promise((resolve, reject) => {
-    const payload = createPayload({ tokenId });
-
-    axios.post(API_GET_USER_TOKEN, payload)
-      .then((response) => {
-        // console.log('getUserToken', response);
-
-        if (response.data && response.data.data && response.data.data.token) {
-          resolve(response.data.data.token);
-        } else {
-          resolve(null);
-        }
-      })
-      .catch((err) => reject(err));
-  });
 }
 
 function verifyClaim(userTokenId, claimType, value) {
@@ -136,7 +117,6 @@ function getIdDocument(tokenId) {
 }
 
 module.exports = {
-  getUserToken,
   getAmlCheck,
   getIdDocument,
   verifyClaim,
