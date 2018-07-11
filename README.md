@@ -22,3 +22,14 @@ Run `npm run start` or `yarn start` to start client-side part of the application
 Run `npm run server` or `yarn server` to start server-side part (API) of the application.
 
 Server API will be running and http://localhost:3001 and frontend will run on http://localhost:3000 by default.
+
+## Authenteq Claims
+
+### Anti-money laundering (AML)
+
+Sample result (JSON):
+  `{"id":0,"ref":"1527688904-A1rpXA6h","match_status":"no_match"}`
+
+### Know your customer (KYC)
+
+The KYC endpoint will return a JPEG photo of user's passport in binary format.
