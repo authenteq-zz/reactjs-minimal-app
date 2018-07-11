@@ -6,6 +6,10 @@ You can find the most recent version of this guide [here](https://github.com/fac
 
 For complete integration manual, refer to [Authenteq Integration Manual](https://authenteq.atlassian.net/wiki/spaces/CG/pages/98953/Authenteq+ID+Implementation+Guide).
 
+## Changelog
+
+See [CHANGELOG](CHANGELOG.md) for changes in past versions.
+
 ## Installing and starting the app
 
 First, you have to install all dependencies using the `npm` or `yarn` command. The application consists of a frontend part and backend API. We implement backend API, so we don't expose `Authenteq API key`. Backend is using `Authenteq API key` along with `Authenteq PartnerID` to query Authenteq service.
