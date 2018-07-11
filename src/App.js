@@ -9,6 +9,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      aqrSvg: null,
       sessionId: null,
       tokenId: null,
       step: 'form',
@@ -30,10 +31,12 @@ class App extends Component {
     api.connect(this.handleApiConnect, this.handleUserAuthenticate, scope);
   }
 
-  handleApiConnect = (sessionId) => {
-    console.log('handleApiConnect::sessionId', sessionId);
+  handleApiConnect = (data) => {
+    console.log('handleApiConnect::data', data);
+    const aqrSvg = `data:image/svg+xml;base64,${window.btoa(unescape(encodeURIComponent(data.svg)))}`
     this.setState({
-      sessionId,
+      sessionId: data.id,
+      aqrSvg: aqrSvg,
     });
   }
 
@@ -44,7 +47,7 @@ class App extends Component {
       tokenId,
     });
 
-    // Verify data after we recived signal that user have scanned QR code
+    // Verify data after we recived signal that user have scanned AQR code
     this.handleVerifyData(tokenId, this.state.formData);
   }
 
@@ -61,15 +64,15 @@ class App extends Component {
       formData,
     } = this.state;
 
-    // Switch to QR code screen if user have not scanned QR code yet
+    // Switch to AQR code screen if user have not scanned AQR code yet
     if (!tokenId) {
       this.setState({
-        step: 'qr-code',
+        step: 'aqr-code',
       });
       return false;
     }
 
-    // This call allows us to verify data again after user scanned QR code
+    // This call allows us to verify data again after user scanned AQR code
     // and filled form is shown. It gets the user opportunity to correct
     // information
     this.handleVerifyData(tokenId, formData);
@@ -123,6 +126,7 @@ class App extends Component {
     const {
       claimResults,
       formData,
+      aqrSvg,
       amlData,
       imgData,
       step,
@@ -136,10 +140,11 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to Authenteq sample app</h1>
         </header>
-        { step === 'qr-code' && (
+        { step === 'aqr-code' && (
           <div>
             <h3>Scan using Authenteq app</h3>
-            <QRCode value={sessionId} />
+            {/* <QRCode value={sessionId} /> */}
+            <img src={aqrSvg} width="330" height="330" alt="AQR code" />
           </div>
         )}
         { step === 'form' && (

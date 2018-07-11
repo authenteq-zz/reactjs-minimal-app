@@ -81,8 +81,9 @@ export function connect(onConnect, onUserAuthenticate, scope) {
       const data = JSON.parse(response.body);
       const tokenId = data.id;
 
-      // Handle tokenId to app logic, so app can display a QR code
-      onConnect(tokenId);
+      // Handle data to app logic, so app can display the AQR code
+      // data = { id, svg }
+      onConnect(data);
 
       stompClient.subscribe(`/topic/authenticate.${tokenId}`, () => {
 
