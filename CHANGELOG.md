@@ -1,5 +1,10 @@
 # Changelog
 
+### v1.2.1
+
+* Updated list of countries in `src/countries.json`. Now, it also includes
+`nationality` value.
+
 ### v1.2.0
 
 * Changed QR code to AQR code
