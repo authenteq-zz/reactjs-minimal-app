@@ -4,6 +4,13 @@
 // AUTHENTEQ_API_KEY=<your Authenteq API KEY>
 require('dotenv').config()
 
+if (process.env.AUTHENTEQ_PARTNER_ID === undefined || process.env.AUTHENTEQ_API_KEY === undefined) {
+  console.error('Please create a file `.env` with following content:');
+  console.error('AUTHENTEQ_PARTNER_ID=<your partner id>');
+  console.error('AUTHENTEQ_API_KEY=<your API key>');
+  process.exit(1);
+}
+
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
