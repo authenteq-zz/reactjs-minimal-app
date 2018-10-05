@@ -3,7 +3,6 @@ import * as api from './api';
 import logo from './logo.png';
 import './App.css';
 import Form from './Form';
-import QRCode from './QRCode';
 
 class App extends Component {
   constructor() {
@@ -130,7 +129,6 @@ class App extends Component {
       amlData,
       imgData,
       step,
-      sessionId,
       errorMessage,
     } = this.state;
 
@@ -143,7 +141,6 @@ class App extends Component {
         { step === 'aqr-code' && (
           <div>
             <h3>Scan using Authenteq app</h3>
-            {/* <QRCode value={sessionId} /> */}
             <img src={aqrSvg} width="330" height="330" alt="AQR code" />
           </div>
         )}
@@ -167,7 +164,7 @@ class App extends Component {
             { imgData && (
               <div>
                 <h3>Photo of passport</h3>
-                <img src={imgData} width="600" height="auto" id="photo"/>
+                <img src={imgData} width="600" height="auto" id="photo" alt="passport"/>
               </div>
             )}
           </div>
