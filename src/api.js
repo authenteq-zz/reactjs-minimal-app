@@ -2,7 +2,7 @@ import SockJS from 'sockjs-client';
 import StompJS from 'stompjs';
 import axios from 'axios';
 
-const PARTNER_ID = 'ynKF89';
+const PARTNER_ID = '<<< Authenteq Partner ID >>>';
 const API_ROOT = 'https://api.authenteq.com';
 const API_LOGIN = `${API_ROOT}/login`;
 
@@ -64,6 +64,11 @@ export function getIdDocument(tokenId) {
 export function connect(onConnect, onUserAuthenticate, scope) {
   if (onConnect === undefined || onUserAuthenticate === undefined) {
     throw Error('Authenteq API::connect - both onConnect and onUserAuthenticate must be specified');
+  }
+
+  if (PARTNER_ID === '<<< Authenteq Partner ID >>>') {
+    console.error('Please set your `PARTNER_ID` in `src/api.js` file.');
+    return;
   }
 
   // console.log('Connecting using Stomp..');
